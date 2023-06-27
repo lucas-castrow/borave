@@ -1,4 +1,4 @@
-package org.borave.controller;
+package org.borave.model;
 
 import org.bson.types.ObjectId;
 

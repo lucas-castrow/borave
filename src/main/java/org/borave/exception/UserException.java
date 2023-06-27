@@ -16,8 +16,8 @@ public class UserException extends RuntimeException {
             super(message);
         }
     }
-    public static class UserNotExists extends UserException {
-        public UserNotExists(String message) {
+    public static class UserNotFoundException extends UserException {
+        public UserNotFoundException(String message) {
             super(message);
         }
     }

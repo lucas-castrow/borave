@@ -1,33 +1,44 @@
 package org.borave.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.borave.exception.UserException;
 import org.borave.model.ApiResponse;
+import org.borave.model.AuthenticationRequest;
 import org.borave.model.User;
+import org.borave.model.UserResponseDTO;
 import org.borave.service.UserService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
+    private final AuthController authController;
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthController authController) {
         this.userService = userService;
+        this.authController = authController;
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity<ApiResponse> addUser(@RequestBody User user) {
+    public ResponseEntity<?> addUser(@RequestBody User user) {
         try {
+            String pass = user.getPassword();
             User createdUser = userService.addUser(user);
-            ApiResponse response = new ApiResponse<>(true, "User successfully created", createdUser);
-            return ResponseEntity.ok(response);
+            AuthenticationRequest authenticationRequest = new AuthenticationRequest(user.getUsername(), pass);
+            ResponseEntity<?> authenticationResponse = authController.authenticateUser(authenticationRequest);
+            if (authenticationResponse.getStatusCode().is2xxSuccessful()) {
+                // Usuário criado e autenticado com sucesso
+                ApiResponse response = new ApiResponse<>(true, "User successfully created and logged in", authenticationResponse.getBody());
+                return ResponseEntity.ok(response);
+            } else {
+                // Falha no processo de autenticação
+                ApiResponse response = new ApiResponse<>(false, "Failed to log in after user creation", null);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            }
         }catch (UserException ex) {
             ApiResponse response = new ApiResponse<>(false, ex.getMessage(), null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);

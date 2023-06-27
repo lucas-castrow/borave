@@ -1,20 +1,21 @@
 package org.borave.service;
 
-import org.borave.controller.UserResponseDTO;
+import org.borave.model.UserResponseDTO;
 import org.borave.exception.UserException;
 import org.borave.model.User;
 import org.borave.repository.UserRepository;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     public User addUser(User user) {
         if(userRepository.existsByUsername(user.getUsername())){
@@ -22,6 +23,9 @@ public class UserService {
         }else if(userRepository.existsByEmail(user.getEmail())){
             throw new UserException.EmailAlreadyExistsException("Email already exists");
         }
+        String encryptedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encryptedPassword);
+
        return userRepository.save(user);
     }
     public User addFriend(String username, String friendUsername) {
@@ -29,7 +33,7 @@ public class UserService {
         User friend = userRepository.findByUsername(friendUsername);
 
         if (user == null || friend == null){
-            throw new UserException.UserNotExists("User not found");
+            throw new UserException.UserNotFoundException("User not found");
         }
         friend.getFriendRequests().add(user.getId());
         userRepository.save(friend);
@@ -56,7 +60,7 @@ public class UserService {
             UserResponseDTO userResponse = new UserResponseDTO(user.getName(), user.getEmail(), user.getUsername());
             return userResponse;
         }else {
-            throw new UserException.UserNotExists("User not found");
+            throw new UserException.UserNotFoundException("User not found");
         }
     }
 }
