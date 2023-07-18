@@ -5,7 +5,7 @@ public class PostException  extends RuntimeException {
         super(message);
     }
 
-    public static class PostNotCreated extends UserException {
+    public static class PostNotCreated extends ProfileException {
         public PostNotCreated(String message) {
             super(message);
         }

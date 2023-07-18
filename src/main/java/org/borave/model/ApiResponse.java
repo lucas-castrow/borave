@@ -2,13 +2,13 @@ package org.borave.model;
 
 public class ApiResponse<T> {
     private boolean status;
-    private String response;
+    private String message;
 
     private T data;
 
     public ApiResponse(boolean status, String response, T data) {
         this.status = status;
-        this.response = response;
+        this.message = response;
         this.data = data;
     }
 
@@ -20,12 +20,12 @@ public class ApiResponse<T> {
         this.status = status;
     }
 
-    public String getResponse() {
-        return response;
+    public String getMessage() {
+        return message;
     }
 
-    public void setResponse(String response) {
-        this.response = response;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public T getData() {

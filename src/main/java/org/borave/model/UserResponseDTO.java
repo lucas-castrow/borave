@@ -6,22 +6,12 @@ public class UserResponseDTO {
     private String name;
     private String email;
     private String username;
-    private Integer friendLevelStory;
 
-    public UserResponseDTO( String name, String email, String username) {
-        this.name = name;
+    public UserResponseDTO(String email, String username) {
         this.email = email;
         this.username = username;
     }
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getEmail() {
         return email;
@@ -39,11 +29,4 @@ public class UserResponseDTO {
         this.username = username;
     }
 
-    public Integer getFriendLevelStory() {
-        return friendLevelStory;
-    }
-
-    public void setFriendLevelStory(Integer friendLevelStory) {
-        this.friendLevelStory = friendLevelStory;
-    }
 }

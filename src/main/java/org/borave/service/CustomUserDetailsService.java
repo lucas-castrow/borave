@@ -1,6 +1,6 @@
 package org.borave.service;
 
-import org.borave.exception.UserException;
+import org.borave.exception.ProfileException;
 import org.borave.model.CustomUserDetails;
 import org.borave.model.User;
 import org.borave.repository.UserRepository;
@@ -25,6 +25,6 @@ public class CustomUserDetailsService  implements UserDetailsService {
         if (user != null) {
             return new CustomUserDetails(user);
         }
-        throw new UserException.UserNotFoundException("User not found");
+        throw new ProfileException.ProfileNotFoundException("Username not found");
     }
 }

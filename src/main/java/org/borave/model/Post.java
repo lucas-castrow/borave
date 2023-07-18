@@ -1,7 +1,5 @@
 package org.borave.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
@@ -19,11 +17,11 @@ import java.util.List;
 public class Post {
 
     @Id
-    private ObjectId id;
+    private String id;
 
     private String postedBy;
     private String content;
-    private LocalDateTime timestamp;
+    private LocalDateTime sendAt;
     private List<String> viewers;
     private List<String> likes;
     private List<Comment> comments;
@@ -32,15 +30,17 @@ public class Post {
     public Post(String postedBy, String content, List<String> authorizedUsers){
         this.postedBy = postedBy;
         this.content = content;
-        this.timestamp = LocalDateTime.now();
+        this.sendAt = LocalDateTime.now();
         this.viewers = new ArrayList<>();
         this.likes = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.authorizedUsers = authorizedUsers;
     }
 
+    public PostDTO toDTO(){return new PostDTO(this.id, this.postedBy, this.content, this.sendAt);}
+
     public String getId() {
-        return id.toString();
+        return id;
     }
 
 
@@ -60,12 +60,12 @@ public class Post {
         this.content = content;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public LocalDateTime getSendAt() {
+        return sendAt;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setSendAt(LocalDateTime sendAt) {
+        this.sendAt = sendAt;
     }
 
     public List<String> getViewers() {

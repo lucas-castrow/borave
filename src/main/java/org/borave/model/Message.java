@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 //        read: Indicador se a mensagem foi lida pelo destinatário.
 public class Message {
     @Id
-    private ObjectId id;
-    private ObjectId senderId;
-    private ObjectId recipientId;
+    private String id;
+    private String senderId;
+    private String recipientId;
     private String content;
     private LocalDateTime timestamp;
     private boolean read;
