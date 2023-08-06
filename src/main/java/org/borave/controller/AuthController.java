@@ -5,6 +5,7 @@ import org.borave.exception.ProfileException;
 import org.borave.model.ApiResponse;
 import org.borave.model.AuthenticationRequest;
 import org.borave.model.AuthenticationResponse;
+import org.borave.model.Profile;
 import org.borave.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,11 +46,13 @@ public class AuthController {
         );
           try {
               SecurityContextHolder.getContext().setAuthentication(authentication);
-              String jwt = jwtTokenProvider.createToken(authentication);
+              Profile profile = profileService.getMyProfile(authenticationRequest.getUsername());
+              String jwt = jwtTokenProvider.createToken(authentication, profile.getUserId());
               Map<String, Object> data = new HashMap<>();
-              data.put("profile", profileService.getMyProfile(authenticationRequest.getUsername()));
+              data.put("profile", profile);
               data.put("token", jwt);
               ApiResponse response = new ApiResponse<>(true, "User founded", data);
+
               return ResponseEntity.ok(response);
           }
           catch(ProfileException ex){

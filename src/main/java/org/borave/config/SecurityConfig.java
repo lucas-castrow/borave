@@ -70,9 +70,9 @@ public class SecurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("*"); // Permitir todas as origens
-        config.addAllowedMethod("*"); // Permitir todos os métodos (GET, POST, PUT, DELETE, etc.)
-        config.addAllowedHeader("*"); // Permitir todos os cabeçalhos
+        config.addAllowedOrigin("*"); //permite todas as origens
+        config.addAllowedMethod("*"); //permite todos os métodos (GET, POST, PUT, DELETE, etc.)
+        config.addAllowedHeader("*"); //permite todos os cabeçalhos
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

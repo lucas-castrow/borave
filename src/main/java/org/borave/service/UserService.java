@@ -4,6 +4,8 @@ import org.borave.model.Profile;
 import org.borave.model.UserResponseDTO;
 import org.borave.exception.ProfileException;
 import org.borave.model.User;
+import org.borave.nats.NatsService;
+import org.borave.nats.NatsSubjects;
 import org.borave.repository.ProfileRepository;
 import org.borave.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,9 @@ public class UserService {
 
     private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(UserRepository userRepository, ProfileRepository profileRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, ProfileRepository profileRepository, PasswordEncoder passwordEncoder, NatsService natsService) {
         this.userRepository = userRepository;
         this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;

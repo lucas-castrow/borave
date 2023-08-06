@@ -37,7 +37,7 @@ public class Post {
         this.authorizedUsers = authorizedUsers;
     }
 
-    public PostDTO toDTO(){return new PostDTO(this.id, this.postedBy, this.content, this.sendAt);}
+    public PostDTO toDTO(String postedUsername){return new PostDTO(this.id, this.postedBy, postedUsername, this.content, this.sendAt);}
 
     public String getId() {
         return id;

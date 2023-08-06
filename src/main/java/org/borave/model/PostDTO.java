@@ -4,23 +4,28 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostDTO {
 
     private String id;
     private String postedBy;
-    private String content;
+
+    private String postedUsername;
+    private List<String> content;
     private LocalDateTime sendAt;
 
     private String senderPhoto;
 
     private Integer friendLevelStories;
 
-    public PostDTO(String id, String postedBy, String content, LocalDateTime sendAt) {
+    public PostDTO(String id, String postedBy, String postedUsername, String content, LocalDateTime sendAt) {
         this.id = id;
         this.postedBy = postedBy;
-        this.content = content;
+        this.postedUsername = postedUsername;
+        this.content = new ArrayList<>();
+        this.content.add(content);
         this.sendAt = sendAt;
     }
 
@@ -32,8 +37,15 @@ public class PostDTO {
         return postedBy;
     }
 
-    public String getContent() {
+    public List<String> getContent() {
         return content;
+    }
+
+    public void addContent(String content){
+        this.content.add(content);
+    }
+    public String getPostedUsername() {
+        return postedUsername;
     }
 
     public LocalDateTime getSendAt() {

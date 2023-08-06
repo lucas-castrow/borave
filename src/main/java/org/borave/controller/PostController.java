@@ -1,8 +1,11 @@
 package org.borave.controller;
 
 import org.borave.config.JwtTokenProvider;
+import org.borave.exception.ProfileException;
 import org.borave.model.ApiResponse;
 import org.borave.model.Post;
+import org.borave.model.PostDTO;
+import org.borave.model.ProfileDTO;
 import org.borave.service.PostService;
 import org.borave.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,26 @@ public class PostController {
             response = new ApiResponse(true, "Post created successfully", createdPost);
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
+            response = new ApiResponse(false, ex.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> posts(@PathVariable ("id") String id,  @RequestHeader("Authorization") String authorizationHeader){
+        String token = authorizationHeader.substring(7);
+        ApiResponse response;
+        try {
+            if (!jwtTokenProvider.isRealUser(token, profileService.getUsernameByUserId(id))) {
+                response = new ApiResponse<>(false, "Bearer token invalid for this user.", null);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+
+            List<PostDTO> postsDTO = postService.findPostsSent(id);
+            response = new ApiResponse(true, "Posts loaded", postsDTO);
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
             response = new ApiResponse(false, ex.getMessage(), null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }

@@ -108,7 +108,11 @@ public class ProfileService {
             User friend = userRepository.findById(friendProfile.getUserId());
 
             if(friendProfile != null) {
-                ProfileDTO profileDTO = new ProfileDTO(friendProfile.getId(), friend.getId(), friendProfile.getName(), friend.getUsername(), friendProfile.getPhoto(), friendProfile.getFriends());
+                ArrayList<String> commonFriends = new ArrayList<>(user.getFriends());
+                commonFriends.retainAll(friendProfile.getFriends());
+                commonFriends = new ArrayList<>(commonFriends.subList(0, Math.min(3, commonFriends.size())));
+
+                ProfileDTO profileDTO = new ProfileDTO(friendProfile.getId(), friend.getId(), friendProfile.getName(), friend.getUsername(), friendProfile.getPhoto(), commonFriends);
                 profileDTO.setFriendLevelStories(user.getFriendLevelStories(profileDTO.getId()));
                 profiles.add(profileDTO);
             }
@@ -129,7 +133,10 @@ public class ProfileService {
             Profile friendProfile = profileRepository.findById(friendRequest);
             User friend = userRepository.findById(friendProfile.getUserId());
             if(friendProfile != null) {
-                profiles.add(new ProfileDTO(friendProfile.getId(), friend.getId(), friendProfile.getName(), friend.getUsername(), friendProfile.getPhoto(), friendProfile.getFriends()));
+                ArrayList<String> commonFriends = new ArrayList<>(user.getFriends());
+                commonFriends.retainAll(friendProfile.getFriends());
+                commonFriends = new ArrayList<>(commonFriends.subList(0, Math.min(3, commonFriends.size())));
+                profiles.add(new ProfileDTO(friendProfile.getId(), friend.getId(), friendProfile.getName(), friend.getUsername(), friendProfile.getPhoto(), commonFriends));
             }
         }
 

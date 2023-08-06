@@ -1,7 +1,6 @@
 package org.borave.model;
 
 import java.util.List;
-import java.util.Map;
 
 public class ProfileDTO {
 
@@ -15,17 +14,17 @@ public class ProfileDTO {
 
     private String photo;
 
-    private List<String> friends;
+    private List<String> commonFriends;
 
     private Integer friendLevelStories;
 
-    public ProfileDTO(String id, String userId, String name, String username, String photo, List<String> friends) {
+    public ProfileDTO(String id, String userId, String name, String username, String photo, List<String> commonFriends) {
         this.id = id;
         this.userId = userId;
         this.name = name;
         this.username = username;
         this.photo = photo;
-        this.friends = friends;
+        this.commonFriends = commonFriends;
     }
 
     public Integer getFriendLevelStories() {
@@ -56,7 +55,7 @@ public class ProfileDTO {
         return photo;
     }
 
-    public List<String> getFriends() {
-        return friends;
+    public List<String> getCommonFriends() {
+        return commonFriends;
     }
 }

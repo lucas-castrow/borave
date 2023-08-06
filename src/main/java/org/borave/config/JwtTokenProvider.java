@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtTokenProvider {
@@ -18,12 +20,14 @@ public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
     private String secret;
-    private static final long TOKEN_VALIDITY = 86400000; // 1 hour in milliseconds
+    private static final long TOKEN_VALIDITY = 86400000; //1 dia
 
-    public String createToken(Authentication authentication) {
+    public String createToken(Authentication authentication, String userId) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + TOKEN_VALIDITY);
+        List<String> topics = new ArrayList<String>();
+
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(now)

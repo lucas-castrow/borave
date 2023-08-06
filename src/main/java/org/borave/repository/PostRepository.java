@@ -1,6 +1,7 @@
 package org.borave.repository;
 
 import org.borave.model.Post;
+import org.borave.model.Profile;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -8,7 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PostRepository extends MongoRepository<Post, ObjectId> {
+public interface PostRepository extends MongoRepository<Post, ObjectId>, PostRepositoryCustom {
 
-    List<Post> findByAuthorizedUsersContains(String userId);
+    List<Post> findPostsByAuthorizedUsers(String profileId);
+    public <S extends Post> S save(S post);
 }
