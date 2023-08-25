@@ -150,4 +150,11 @@ public class ProfileService {
         }
         return userRepository.findById(profile.getUserId()).getUsername();
     }
+    public String getUsernameById(String id){
+        if(!userRepository.existsById(id)){
+            return null;
+//            throw new ProfileException.ProfileNotFoundException("User not found");
+        }
+        return userRepository.findById(id).getUsername();
+    }
 }

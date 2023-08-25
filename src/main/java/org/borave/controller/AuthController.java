@@ -1,6 +1,8 @@
 package org.borave.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.borave.config.JwtTokenProvider;
+import org.borave.config.JwtTokenStatus;
 import org.borave.exception.ProfileException;
 import org.borave.model.ApiResponse;
 import org.borave.model.AuthenticationRequest;

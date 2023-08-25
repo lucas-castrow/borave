@@ -30,8 +30,7 @@ public class SecurityConfig {
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
     public SecurityConfig(JwtTokenFilter jwtAuthenticationFilter,
-                          UserDetailsService userDetailsService
-                          ) {
+                          UserDetailsService userDetailsService) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
         this.daoAuthenticationProvider = new DaoAuthenticationProvider();;
@@ -56,14 +55,12 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/users/addUser").permitAll()
+                        auth.requestMatchers("/api/auth/**", "/api/users/addUser").permitAll()
                                 .anyRequest().authenticated()
                 );
         httpSecurity.cors();
-        httpSecurity.authenticationProvider(authenticationProvider());
-
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.authenticationProvider(authenticationProvider());
 
         return httpSecurity.build();
     }

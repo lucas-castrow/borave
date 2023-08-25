@@ -26,10 +26,22 @@ public class JwtTokenProvider {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + TOKEN_VALIDITY);
-        List<String> topics = new ArrayList<String>();
+        List<String> topics = new ArrayList<>();
 
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
+    }
+
+    public String createToken(String username) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + TOKEN_VALIDITY);
+        List<String> topics = new ArrayList<>();
+        return Jwts.builder()
+                .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, secret)
@@ -43,24 +55,30 @@ public class JwtTokenProvider {
         }
         return null;
     }
-
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token);
-            return true;
-        } catch (MalformedJwtException ex) {
-            System.err.println("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            System.err.println("Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            System.err.println("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            System.err.println("JWT claims string is empty");
-        } catch (SignatureException e) {
-            System.err.println("Error with the signature of your token");
+    public String resolveUsername(HttpServletRequest request) {
+        String bearerToken = request.getHeader("user");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("User ")) {
+            System.out.println("Entrou");
+            return bearerToken.substring(5);
         }
-        return false;
+        return null;
     }
+public JwtTokenStatus validateToken(String token) {
+    try {
+        Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token);
+        return JwtTokenStatus.VALID;
+    } catch (MalformedJwtException ex) {
+        return JwtTokenStatus.INVALID;
+    } catch (ExpiredJwtException ex) {
+        return JwtTokenStatus.EXPIRED;
+    } catch (UnsupportedJwtException ex) {
+        return JwtTokenStatus.UNSUPPORTED;
+    } catch (IllegalArgumentException ex) {
+        return JwtTokenStatus.EMPTY;
+    } catch (SignatureException e) {
+        return JwtTokenStatus.SIGNATURE;
+    }
+}
 
     public String getUsername(String token) {
         return Jwts.parserBuilder()

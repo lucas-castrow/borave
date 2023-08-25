@@ -21,7 +21,7 @@ public class ProfileController {
 
     private final JwtTokenProvider jwtTokenProvider;
     @Autowired
-    public ProfileController(ProfileService profileService, UserService userService, JwtTokenProvider jwtTokenProvider) {
+    public ProfileController(ProfileService profileService, JwtTokenProvider jwtTokenProvider) {
         this.profileService = profileService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
